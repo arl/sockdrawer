@@ -1,0 +1,27 @@
+
+# Cluster definitions for a hypothetical split of the fmt package.
+
+= util
+buffer
+parsenum
+func$4 # init function
+
+= print
+Errorf
+Print
+Printf
+Println
+Sprint
+Sprintf
+Sprintln
+
+= scan
+Fscan
+Fscanf
+Fscanln
+Sscan
+Sscanf
+Sscanln
+Scan
+Scanf
+Scanln

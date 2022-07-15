@@ -1,0 +1,264 @@
+
+# Cluster definitions for a hypothetical split of the "runtime" package.
+
+# The core cluster.  Mostly data types from runtime2.go.
+# NOTES:
+# - some common utils (add, hex) should be copy/pasted.
+# - asminit needs to be broken up.
+= runtime/internal/core
+g
+m
+fing
+g0
+m0
+mutex
+note
+setg
+needm
+itab
+eface
+slice
+asminit
+signote
+sigset_none
+sigset
+sigaltstack
+stack
+hex
+memclr
+add
+cgomal
+ptrSize
+_PageShift
+funcval
+gcstats
+uintreg
+goos_windows
+goos_plan9
+lastg
+
+# NB: we must break the edges from lock/unlock to gothrow to
+# avoid pulling in a mass of stuff!
+= runtime/internal/lock
+lock
+unlock
+
+# panic, traceback, but also: signals, memory allocation, parts of GC, scheduler
+# NB: we must split setsig -> sighandler edge to avoid a huge
+#   cycle from throw -> dopanic -> dopanic_m -> crash -> setsig ->
+#              sighandler -> sigprof -> cpuproftick -> MASSES (startm, allocm,
+#   schedule)
+= runtime/internal/throw
+gothrow
+
+= runtime/internal/sched
+sched
+schedt
+gosched_m
+block
+addtimer
+
+= runtime/internal/gc
+GC
+
+= runtime/internal/prof
+MemProfileRecord
+SetBlockProfileRate
+SetCPUProfileRate
+MemProfile
+BlockProfile
+ThreadCreateProfile
+ReadMemStats
+func$mem.1 # init func for sizeof_C_MStats
+
+= runtime/internal/channels
+newselect
+selectrecv
+selectrecv2
+selectrecvImpl
+chansend1
+selectnbsend
+selectnbrecv
+selectnbrecv2
+reflect_chanrecv
+chanrecv1
+chanrecv2
+selectgo
+selectDir
+
+= runtime/internal/hash
+hash
+func$alg.1 # init function for algarray; pulls in random
+int64Hash
+stringHash
+efaceHash
+int32Hash
+bytesHash
+ifaceHash
+
+= runtime/internal/heapdump
+writeHeapDump
+dumpfd
+dumpotherroot
+
+= runtime/internal/maps
+hmap
+bmap
+hiter
+mapaccess1_fast32
+mapaccess2_fast32
+mapaccess1_fast64
+mapaccess2_fast64
+mapaccess1_faststr
+mapaccess2_faststr
+mapaccess1
+mapaccess2
+mapaccessK
+mapiterinit
+reflect_mapiternext
+makemap
+mapassign1
+mapdelete
+
+= runtime/internal/netpoll
+netpollarm
+netpollblockcommit
+netpollblock
+netpollcheckerr
+netpollclose
+netpollClose
+netpollDeadline
+netpolldeadlineimpl
+netpollinit
+netpollopen
+netpollOpen
+netpollReadDeadline
+netpollReset
+netpollServerInit
+netpollSetDeadline
+netpollUnblock
+netpollWaitCanceled
+netpollWait
+netpollWriteDeadline
+
+= runtime/internal/ifacestuff
+convI2I
+convT2E
+convT2I
+convI2E
+assertI2T
+assertI2T2
+assertI2TOK
+assertE2T
+assertE2T2
+assertE2TOK
+assertI2E
+assertI2E2
+assertI2I
+assertI2I2
+assertE2I
+assertE2I2
+assertE2E
+assertE2E2
+
+= runtime/internal/vdso
+args
+
+= runtime/internal/printf
+printf
+snprintf
+
+= runtime/internal/strings
+concatstring2
+concatstring3
+concatstring4
+concatstring5
+gostring
+
+= runtime/internal/fp # (totally disconnected)
+fsub64
+fadd64c
+fneg64c
+f32to64
+fintto64
+fdiv64
+fmul64
+f64toint
+f64to32
+sqrt
+posinf
+isnan
+
+= runtime/internal/schedinit # another tangle in its own right...
+schedinit
+
+= runtime/internal/finalize
+SetFinalizer
+
+= runtime/internal/cgo
+cmalloc
+cfree
+cgocallbackg
+weak_cgo_allocate
+
+= runtime/internal/sync
+syncsemacquire
+syncsemrelease
+syncsemcheck
+
+= runtime/internal/check # runtime assertions
+check
+
+= runtime/internal/stackwb
+writebarrierptr
+writebarrierptr_nostore
+writebarrierstring
+writebarrierslice
+writebarrieriface
+writebarrierfat
+writebarriercopy
+writebarrierfat01
+writebarrierfat10
+writebarrierfat11
+writebarrierfat001
+writebarrierfat010
+writebarrierfat011
+writebarrierfat100
+writebarrierfat101
+writebarrierfat110
+writebarrierfat111
+writebarrierfat0001
+writebarrierfat0010
+writebarrierfat0011
+writebarrierfat0100
+writebarrierfat0101
+writebarrierfat0110
+writebarrierfat0111
+writebarrierfat1000
+writebarrierfat1001
+writebarrierfat1010
+writebarrierfat1011
+writebarrierfat1100
+writebarrierfat1101
+writebarrierfat1110
+writebarrierfat1111
+
+= runtime/internal/defers
+Goexit
+deferreturn
+gopanic
+func$panic.1 # init of _defer
+
+= runtime/internal/seq # string and slice alloc stuff
+makeslice
+growslice
+slicebytetostringtmp
+slicebytetostring
+slicecopy
+slicestringcopy
+slicerunetostring
+intstring
+gostringw
+stringiter
+rawruneslice
+stringiter2

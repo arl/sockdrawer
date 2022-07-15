@@ -169,8 +169,10 @@ func (o *organizer) buildNodeGraph() {
 
 				// concrete method decl?
 				if n.recv != nil {
-					n.name = fmt.Sprintf("(%s).%s",
-						types.TypeString(o.info.Pkg, n.recv), n.name)
+					// TODO(arl) old code, doesn't compile
+					//  n.name = fmt.Sprintf("(%s).%s",
+					// 	 types.TypeString(o.info.Pkg, n.recv), n.name)
+					n.name = fmt.Sprintf("(%s).%s", n.recv, n.name)
 				}
 			} else {
 				// e.g. blank identifier, or func init.

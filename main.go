@@ -71,8 +71,8 @@ func main() {
 
 func doMain(args []string) error {
 	conf := loader.Config{
-		SourceImports: true,
-		ParserMode:    parser.ParseComments,
+		// SourceImports: true, // TODO(arl) not found in loader.Config
+		ParserMode: parser.ParseComments,
 	}
 
 	if len(args) == 0 {

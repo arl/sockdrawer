@@ -9,7 +9,7 @@ Install with:
 go install github.com/arl/sockdrawer@latest
 ```
 
-### disclaimer
+## Disclaimer
 
 The code is in this repository is based on the `sockdrawer` program, an original
 work by [Alan Donovan](github.com/adonovan), which is accessible at

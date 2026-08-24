@@ -162,9 +162,9 @@
     <h2>3. Workflow</h2>
     <ol>
       <li>Run <code>-print</code> to inspect the current partition.</li>
-      <li>Run <code>-graphdir</code> to generate the graph views.</li>
+      <li>Use <strong>Preview graph command</strong> to generate <code>-graphdir</code> output.</li>
       <li>Add or adjust cluster stanzas, then repeat.</li>
-      <li>Run <code>-outdir</code> when the split looks right.</li>
+      <li>Use <strong>Preview refactor command</strong> when the split looks right.</li>
     </ol>
   </section>
 
@@ -230,16 +230,7 @@
       await navigator.clipboard.writeText(text);
       el('status').textContent = 'Command copied to clipboard.';
     } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      textarea.remove();
-      el('status').textContent = 'Command copied to clipboard.';
+      el('status').textContent = 'Clipboard unavailable; copy the command from the box below.';
     }
   });
   ['pkg', 'clusters', 'outdir', 'graphdir', 'godoc', 'fuse'].forEach((id) => {

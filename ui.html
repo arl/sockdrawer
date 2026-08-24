@@ -246,6 +246,7 @@
   });
   el('copy').addEventListener('click', async () => {
     const text = command(currentMode);
+    el('command').textContent = text;
     let copied = false;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       try {

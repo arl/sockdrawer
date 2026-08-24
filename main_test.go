@@ -117,7 +117,7 @@ func runSockdrawer(t *testing.T, repoRoot string, args ...string) string {
 	cmdArgs := append([]string{"run", "."}, args...)
 	cmd := exec.Command("go", cmdArgs...)
 	cmd.Dir = repoRoot
-	cmd.Env = append(os.Environ(), "GO111MODULE=on")
+	cmd.Env = os.Environ()
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {

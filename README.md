@@ -3,6 +3,8 @@
 The sockdrawer command is an analysis and visualization tool to help
 you reorganize a complex Go package into several simpler ones.
 
+For a very simple browser-based command builder, open `ui.html` in this repository.
+
 Install with:
 
 ```

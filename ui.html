@@ -13,6 +13,7 @@
       --muted: #6b7280;
       --border: #d1d5db;
       --accent: #2563eb;
+      --button-text: #ffffff;
       --code-bg: #111827;
       --code-text: #f9fafb;
     }
@@ -24,6 +25,7 @@
         --muted: #9ca3af;
         --border: #374151;
         --accent: #60a5fa;
+        --button-text: #0f172a;
         --code-bg: #020617;
         --code-text: #f8fafc;
       }
@@ -93,7 +95,7 @@
       border-radius: 999px;
       padding: 10px 14px;
       background: var(--accent);
-      color: #fff;
+      color: var(--button-text);
       text-decoration: none;
       font: inherit;
       cursor: pointer;
@@ -250,7 +252,9 @@
         await navigator.clipboard.writeText(text);
         el('status').textContent = 'Command copied to clipboard.';
         copied = true;
-      } catch {}
+      } catch {
+        el('status').textContent = 'Clipboard copy failed; copy the command from the box below.';
+      }
     }
     if (!copied) {
       el('status').textContent = 'Clipboard unavailable; copy the command from the box below.';

@@ -247,20 +247,17 @@
   el('copy').addEventListener('click', async () => {
     const text = command(currentMode);
     el('command').textContent = text;
-    let copied = false;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       try {
         await navigator.clipboard.writeText(text);
         el('status').textContent = 'Command copied to clipboard.';
-        copied = true;
+        return;
       } catch {
         el('status').textContent = 'Clipboard copy failed; copy the command from the box below.';
         return;
       }
     }
-    if (!copied) {
-      el('status').textContent = 'Clipboard unavailable; copy the command from the box below.';
-    }
+    el('status').textContent = 'Clipboard unavailable; copy the command from the box below.';
   });
   ['pkg', 'clusters', 'outdir', 'graphdir', 'godoc', 'fuse'].forEach((id) => {
     el(id).addEventListener('input', () => {

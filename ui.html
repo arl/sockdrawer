@@ -229,7 +229,7 @@
     button.addEventListener('click', () => show(button.dataset.mode));
   });
   el('copy').addEventListener('click', async () => {
-    const text = command(currentMode);
+    const text = el('command').textContent;
     try {
       await navigator.clipboard.writeText(text);
       el('status').textContent = 'Command copied to clipboard.';

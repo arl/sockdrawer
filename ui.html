@@ -254,6 +254,7 @@
         copied = true;
       } catch {
         el('status').textContent = 'Clipboard copy failed; copy the command from the box below.';
+        return;
       }
     }
     if (!copied) {

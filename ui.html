@@ -84,6 +84,10 @@
       font: inherit;
       cursor: pointer;
     }
+    button:focus-visible, a.button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
     button.secondary, a.button.secondary {
       background: transparent;
       color: var(--text);
@@ -183,6 +187,7 @@
 
 <script>
   const el = (id) => document.getElementById(id);
+  let currentMode = 'print';
 
   function baseArgs() {
     const args = ['go', 'run', '.'];
@@ -214,18 +219,17 @@
   }
 
   function show(mode) {
+    currentMode = mode;
     const text = command(mode);
     el('command').textContent = text;
     el('status').textContent = `Previewing ${mode} command.`;
-    el('copy').dataset.mode = mode;
-    el('copy').dataset.command = text;
   }
 
   document.querySelectorAll('button[data-mode]').forEach((button) => {
     button.addEventListener('click', () => show(button.dataset.mode));
   });
   el('copy').addEventListener('click', async () => {
-    const text = el('copy').dataset.command || command('print');
+    const text = command(currentMode);
     try {
       await navigator.clipboard.writeText(text);
       el('status').textContent = 'Command copied to clipboard.';
@@ -235,8 +239,7 @@
   });
   ['pkg', 'clusters', 'outdir', 'graphdir', 'godoc', 'fuse'].forEach((id) => {
     el(id).addEventListener('input', () => {
-      const mode = el('copy').dataset.mode || 'print';
-      show(mode);
+      show(currentMode);
     });
   });
   show('print');

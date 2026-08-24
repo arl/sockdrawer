@@ -226,8 +226,21 @@
   });
   el('copy').addEventListener('click', async () => {
     const text = el('copy').dataset.command || command('print');
-    await navigator.clipboard.writeText(text);
-    el('status').textContent = 'Command copied to clipboard.';
+    try {
+      await navigator.clipboard.writeText(text);
+      el('status').textContent = 'Command copied to clipboard.';
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+      el('status').textContent = 'Command copied to clipboard.';
+    }
   });
   ['pkg', 'clusters', 'outdir', 'graphdir', 'godoc', 'fuse'].forEach((id) => {
     el(id).addEventListener('input', () => {

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sockdrawer workflow</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f7fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --button-text: #ffffff;
+      --code-bg: #111827;
+      --code-text: #f9fafb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --border: #374151;
+        --accent: #60a5fa;
+        --button-text: #0f172a;
+        --code-bg: #020617;
+        --code-text: #f8fafc;
+      }
+    }
+    body {
+      margin: 0;
+      font: 16px/1.5 system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    header, section, footer {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 0 0 16px;
+    }
+    h1, h2, h3 {
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.25rem; }
+    p, li { margin: 0 0 10px; }
+    ul, ol { padding-left: 1.25rem; margin: 0; }
+    .grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      background: inherit;
+      color: inherit;
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .row > * { flex: 1 1 240px; }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    button, a.button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: var(--button-text);
+      text-decoration: none;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:focus-visible, a.button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    button.secondary, a.button.secondary {
+      background: transparent;
+      color: var(--text);
+    }
+    pre {
+      margin: 0;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--code-bg);
+      color: var(--code-text);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace;
+    }
+    .muted { color: var(--muted); }
+    .small { font-size: 0.95rem; }
+    .status { min-height: 1.5em; color: var(--muted); }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>sockdrawer workflow</h1>
+    <p class="muted">A tiny HTML-only command builder for the usual analyze → split → verify loop.</p>
+  </header>
+
+  <section>
+    <h2>1. Fill in the run settings</h2>
+    <div class="grid">
+      <div>
+        <label for="pkg">Package</label>
+        <input id="pkg" value="github.com/arl/sockdrawer/generictest">
+      </div>
+      <div>
+        <label for="clusters">Clusters file</label>
+        <input id="clusters" placeholder="/path/to/clusters.txt">
+      </div>
+      <div>
+        <label for="outdir">Output dir</label>
+        <input id="outdir" placeholder="/tmp/sockdrawer-out">
+      </div>
+      <div>
+        <label for="graphdir">Graph dir</label>
+        <input id="graphdir" placeholder="/tmp/sockdrawer-graphs">
+      </div>
+      <div>
+        <label for="godoc">Godoc URL</label>
+        <input id="godoc" value="http://localhost:4999">
+      </div>
+      <div>
+        <label for="fuse">Fuse single-predecessor SCCs</label>
+        <select id="fuse">
+          <option value="">off</option>
+          <option value="-fuse">on</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Choose a command</h2>
+    <div class="actions">
+      <button type="button" data-mode="print">Preview print command</button>
+      <button type="button" data-mode="graph">Preview graph command</button>
+      <button type="button" data-mode="refactor">Preview refactor command</button>
+      <button type="button" id="copy" class="secondary">Copy command</button>
+    </div>
+    <p class="status" id="status">Ready.</p>
+    <pre id="command"></pre>
+  </section>
+
+  <section>
+    <h2>3. Workflow</h2>
+    <ol>
+      <li>Run <code>-print</code> to inspect the current partition.</li>
+      <li>Use <strong>Preview graph command</strong> to generate the shell command with <code>-graphdir</code>.</li>
+      <li>Add or adjust cluster stanzas, then repeat.</li>
+      <li>Use <strong>Preview refactor command</strong> to generate the shell command with <code>-outdir</code> when the split looks right.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>4. Notes</h2>
+    <ul>
+      <li>This page does not execute shell commands; it builds copy/paste-ready ones.</li>
+      <li>The repository includes a <code>generictest</code> fixture you can use as a quick sanity check.</li>
+    </ul>
+  </section>
+
+  <footer class="small muted">
+    Open this file in a browser, fill the fields, and copy the generated command into your terminal.
+  </footer>
+</main>
+
+<script>
+  const el = (id) => document.getElementById(id);
+  let currentMode = 'print';
+
+  function baseArgs() {
+    const args = ['go', 'run', '.'];
+    const clusters = el('clusters').value.trim();
+    const godoc = el('godoc').value.trim();
+    const fuse = el('fuse').value;
+    if (clusters) args.push(`-clusters=${clusters}`);
+    if (godoc) args.push(`-godoc=${godoc}`);
+    if (fuse) args.push(fuse);
+    return args;
+  }
+
+  function command(mode) {
+    const args = baseArgs();
+    const pkg = el('pkg').value.trim();
+    if (mode === 'print') {
+      args.push('-print');
+      if (pkg) args.push(pkg);
+    } else if (mode === 'graph') {
+      const graphdir = el('graphdir').value.trim();
+      if (graphdir) args.push(`-graphdir=${graphdir}`);
+      if (pkg) args.push(pkg);
+    } else if (mode === 'refactor') {
+      const outdir = el('outdir').value.trim();
+      if (outdir) args.push(`-outdir=${outdir}`);
+      if (pkg) args.push(pkg);
+    }
+    return args.join(' ');
+  }
+
+  function show(mode) {
+    currentMode = mode;
+    const text = command(mode);
+    el('command').textContent = text;
+    el('status').textContent = `Previewing ${mode} command.`;
+  }
+
+  document.querySelectorAll('button[data-mode]').forEach((button) => {
+    button.addEventListener('click', () => show(button.dataset.mode));
+  });
+  el('copy').addEventListener('click', async () => {
+    const text = command(currentMode);
+    el('command').textContent = text;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        el('status').textContent = 'Command copied to clipboard.';
+        return;
+      } catch {
+        el('status').textContent = 'Clipboard copy failed; copy the command from the box below.';
+        return;
+      }
+    }
+    el('status').textContent = 'Clipboard unavailable; copy the command from the box below.';
+  });
+  ['pkg', 'clusters', 'outdir', 'graphdir', 'godoc', 'fuse'].forEach((id) => {
+    el(id).addEventListener('input', () => {
+      show(currentMode);
+    });
+  });
+  show('print');
+</script>
+</body>
+</html>

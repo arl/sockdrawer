@@ -28,6 +28,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"golang.org/x/tools/go/loader"
 )
@@ -76,7 +77,7 @@ func doMain(args []string) error {
 	}
 
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, Usage)
+		fmt.Fprintln(os.Stderr, strings.TrimRight(Usage, "\n"))
 		return nil
 	}
 

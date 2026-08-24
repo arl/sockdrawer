@@ -13,6 +13,8 @@
       --muted: #6b7280;
       --border: #d1d5db;
       --accent: #2563eb;
+      --code-bg: #111827;
+      --code-text: #f9fafb;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -22,6 +24,8 @@
         --muted: #9ca3af;
         --border: #374151;
         --accent: #60a5fa;
+        --code-bg: #020617;
+        --code-text: #f8fafc;
       }
     }
     body {
@@ -106,8 +110,8 @@
       margin: 0;
       padding: 14px;
       border-radius: 12px;
-      background: #111827;
-      color: #f9fafb;
+      background: var(--code-bg);
+      color: var(--code-text);
       overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-word;
